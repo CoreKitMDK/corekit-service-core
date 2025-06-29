@@ -4,8 +4,9 @@ go 1.24.4
 
 require (
 	github.com/CoreKitMDK/corekit-service-configuration/v2 v2.0.1
+	github.com/CoreKitMDK/corekit-service-events/v2 v2.0.0-20250629083642-6bb97350fb4c
 	github.com/CoreKitMDK/corekit-service-logger/v2 v2.0.6
-	github.com/CoreKitMDK/corekit-service-metrics/v2 v2.0.1
+	github.com/CoreKitMDK/corekit-service-metrics/v2 v2.0.3
 	github.com/CoreKitMDK/corekit-service-tracing/v2 v2.0.1
 )
 

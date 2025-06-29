@@ -8,35 +8,38 @@ import (
 
 	"github.com/CoreKitMDK/corekit-service-core/v2/pkg/core"
 	"github.com/CoreKitMDK/corekit-service-logger/v2/pkg/logger"
-	"github.com/CoreKitMDK/corekit-service-metrics/v2/pkg/metrics"
 )
 
 func TestCore(t *testing.T) {
-	Telemetry, err := core.NewCore()
+	Core, err := core.NewCore()
 	if err != nil {
 		t.Error(err)
 	}
 
 	time.Sleep(2 * time.Second)
 
-	Telemetry.Logger.Log(logger.INFO, "Test message")
+	Core.Logger.Log(logger.INFO, "Test message")
 
 	time.Sleep(2 * time.Second)
 
-	Telemetry.Metrics.Log(metrics.NewMetric("test", 1))
+	Core.Metrics.Record("test", 1)
 
 	time.Sleep(2 * time.Second)
+
+	Core.Events.Emit("TEST", "Test data")
+
+	time.Sleep(4 * time.Second)
 }
 
 func TestTracingConfiguration(t *testing.T) {
-	Telemetry, err := core.NewCore()
+	Core, err := core.NewCore()
 	if err != nil {
 		t.Error(err)
 	}
 
 	// Create test server
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		tracer := Telemetry.Tracing.TraceHttpRequest(r).Start()
+		tracer := Core.Tracing.TraceHttpRequest(r).Start()
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello, World!"))
 		tracer.TraceHttpResponseWriter(w).End()

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/CoreKitMDK/corekit-service-configuration/v2/pkg/configuration"
+	"github.com/CoreKitMDK/corekit-service-events/v2/pkg/events"
 	"github.com/CoreKitMDK/corekit-service-logger/v2/pkg/logger"
 	"github.com/CoreKitMDK/corekit-service-metrics/v2/pkg/metrics"
 	"github.com/CoreKitMDK/corekit-service-tracing/v2/pkg/tracing"
@@ -18,6 +19,7 @@ type Core struct {
 	Metrics       metrics.IMultiMetrics
 	Configuration configuration.IConfiguration
 	Tracing       tracing.ITracing
+	Events        events.IMultiEvents
 }
 
 func NewCore() (*Core, error) {
@@ -52,6 +54,16 @@ func NewCore() (*Core, error) {
 		config.NatsPassword = "internal-tracing-broker"
 		config.NatsUsername = "internal-tracing-broker"
 		telemetry.Tracing = config.Init()
+	}
+
+	{
+		config := events.NewConfiguration()
+		config.UseConsole = true
+		config.UseNATS = true
+		config.NatsURL = "nats://internal-events-broker-nats:4222"
+		config.NatsPassword = "internal-events-broker"
+		config.NatsUsername = "internal-events-broker"
+		telemetry.Events = config.Init()
 	}
 
 	{
